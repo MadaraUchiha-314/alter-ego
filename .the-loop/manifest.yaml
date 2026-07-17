@@ -1,0 +1,102 @@
+# .the-loop/manifest.yaml
+# Tracks every file that "the-loop" creates, maintains or tracks within a project.
+# Used by /the-loop:init and /the-loop:upgrade-the-loop to know what exists and
+# what needs to be created or reconciled.
+
+manifestVersion: "0.1.0"
+theLoopVersion: "0.1.0"
+
+# Files internal to the-loop (meta). These live under .the-loop/.
+meta:
+  - path: .the-loop/config.yaml
+    role: project-config
+    managed: true
+  - path: .the-loop/config.schema.json
+    role: config-schema
+    managed: true
+  - path: .the-loop/manifest.yaml
+    role: manifest
+    managed: true
+  - path: .the-loop/external-tools.md
+    role: external-tools-registry
+    managed: false   # user-owned free-form content
+  - path: .the-loop/collaborators.yaml
+    role: collaborators
+    managed: false
+
+templates:
+  - path: .the-loop/templates/epic.md
+  - path: .the-loop/templates/story.md
+  - path: .the-loop/templates/bug.md
+  - path: .the-loop/templates/brainstorm.md
+  - path: .the-loop/templates/requirements.md
+  - path: .the-loop/templates/bugfix.md
+  - path: .the-loop/templates/design.md
+  - path: .the-loop/templates/tasks.md
+  - path: .the-loop/templates/execution-log.md
+  - path: .the-loop/templates/capability.md
+  - path: .the-loop/templates/decision.md
+  - path: .the-loop/templates/learning.md
+  - path: .the-loop/templates/config.yaml
+  - path: .the-loop/templates/collaborators.yaml
+  - path: .the-loop/templates/conflicts.md
+  - path: .the-loop/templates/pr-briefing.md
+  - path: .the-loop/templates/webhook-event-prompt.md
+  - path: .the-loop/templates/webhook-autoexecute-prompt.md
+
+# Per-work-item artifacts: an optional brainstorm scratchpad, the Kiro-style 3-phase spec,
+# plus the execution log. <id> is the ticket id (e.g. issue-1, PROJ-42) — before a ticket
+# exists these live under docs/specs/draft-<slug>/. These MUST be checked in.
+# A bug uses bugfix.md in place of requirements.md.
+workItemArtifacts:
+  - pathPattern: docs/specs/<id>/brainstorm.md
+    role: spec-brainstorm
+    phase: brainstorming
+    optional: true            # the root artifact; only present when the work item was brainstormed
+  - pathPattern: docs/specs/<id>/requirements.md
+    role: spec-requirements
+    phase: requirements-definition
+  - pathPattern: docs/specs/<id>/bugfix.md
+    role: spec-bugfix
+    phase: requirements-definition
+  - pathPattern: docs/specs/<id>/design.md
+    role: spec-design
+    phase: design
+  - pathPattern: docs/specs/<id>/design/
+    role: spec-design-artifacts
+    phase: design
+    optional: true            # UI/UX (visual) design artifacts — html prototypes / figma exports; only when the work item has a user-facing surface
+  - pathPattern: docs/specs/<id>/tasks.md
+    role: spec-tasks
+    phase: tasks-breakdown
+  - pathPattern: docs/specs/<id>/execution-log.md
+    role: execution-log
+
+# API contracts authored contract-first (config.apiSpecs). Documentation is generated
+# from these, never hand-written. Only present in projects that expose an API.
+apiContracts:
+  - pathPattern: specs/openapi/<service>.yaml
+    role: rest-api-contract
+  - pathPattern: specs/graphql/<schema>.graphql
+    role: graphql-schema
+
+# Long-lived project knowledge maintained by the-loop.
+knowledge:
+  - path: docs/architecture/architecture.md
+    role: architecture-index
+  - path: docs/capabilities/capabilities.md
+    role: capabilities-index
+  - pathPattern: docs/capabilities/<capability>.md
+    role: capability-doc   # organized view of specs; single source of truth for current behaviour (issue-25)
+  - path: docs/decisions/decisions.md
+    role: decisions-index
+  - pathPattern: docs/decisions/decision-<nnn>.md
+    role: decision-record
+  - path: docs/decisions/conflicts.md
+    role: conflict-log
+  - path: learnings/learnings.md
+    role: learnings-index
+  - pathPattern: learnings/learning-<nnn>.md
+    role: learning-record
+  - pathPattern: learnings/topics/<category>.md
+    role: learning-topic-overflow
