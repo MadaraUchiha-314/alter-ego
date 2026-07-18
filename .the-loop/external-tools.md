@@ -16,6 +16,10 @@
 
 - _e.g._ `the-loop` — this plugin
 - _e.g._ other installed plugins you want the-loop to leverage
+- `knowledge-management` (this repo, `skills/knowledge-management/`) — maintains the
+  Obsidian-compatible knowledge vault; use it to ingest/query/validate knowledge
+  rather than inventing ad-hoc note structures. Obsidian itself is an optional viewer
+  over the vault, never a dependency.
 
 ## Notes
 

@@ -8,5 +8,4 @@ behaviour (a ready-to-ship gate item).
 
 | Capability | What it covers |
 |------------|----------------|
-
-_No capabilities documented yet._
+| [knowledge-management](./knowledge-management.md) | The knowledge primitive: an Obsidian-compatible markdown vault with provenance-carrying source records, staleness validation, tiered indexing, and pluggable source connectors |
