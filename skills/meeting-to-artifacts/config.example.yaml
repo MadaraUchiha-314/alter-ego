@@ -22,19 +22,19 @@ storage:
 
   requirements:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/requirements.md"
+    pathPattern: "raw/meetings/{date}-{slug}/requirements.md"
 
   design:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/design.md"
+    pathPattern: "raw/meetings/{date}-{slug}/design.md"
 
   summary:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/summary.md"
+    pathPattern: "raw/meetings/{date}-{slug}/summary.md"
 
   tasks:
     kind: filesystem-git       # switch to mcp/cli once an issue tracker integration is wired up
-    pathPattern: "docs/meetings/{date}-{slug}/tasks.md"
+    pathPattern: "raw/meetings/{date}-{slug}/tasks.md"
     # kind: mcp
     # server: github
     # resourceHint: MadaraUchiha-314/alter-ego
@@ -42,19 +42,19 @@ storage:
 
   openQuestions:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/open-questions.md"
+    pathPattern: "raw/meetings/{date}-{slug}/open-questions.md"
 
   risks:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/risks.md"
+    pathPattern: "raw/meetings/{date}-{slug}/risks.md"
 
   disagreements:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/disagreements.md"
+    pathPattern: "raw/meetings/{date}-{slug}/disagreements.md"
 
   context:
     kind: filesystem-git
-    pathPattern: "docs/meetings/{date}-{slug}/context.md"
+    pathPattern: "raw/meetings/{date}-{slug}/context.md"
     # kind: mcp                # e.g. once an mcp server for Notion/Google Docs is configured
     # server: notion
     # resourceHint: "Team Wiki > Glossary"
@@ -70,5 +70,5 @@ series: []
   #   preReadCadence: every-occurrence
   #   publishChannel: "#design-reviews"
 
-effectivenessLog: docs/meetings/effectiveness-log.md
+effectivenessLog: raw/meetings/effectiveness-log.md
 scorecardCadence: on-request

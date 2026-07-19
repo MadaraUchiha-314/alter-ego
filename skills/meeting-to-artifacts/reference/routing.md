@@ -24,7 +24,7 @@ don't guess.
 ## Path patterns
 
 Placeholders `{date}`, `{slug}`, `{seriesSlug}` from meeting metadata; default tree is
-`docs/meetings/{date}-{slug}/...`.
+`raw/meetings/{date}-{slug}/...`.
 
 Keep the routed tree vault-pointable per `reference/knowledge-base-compat.md`: one folder
 per meeting, shared logs at tree root, relative links.

@@ -40,7 +40,7 @@
         "pathPattern": {
           "type": "string",
           "description": "Required when style is plain. Supports {date}, {slug}, {seriesSlug}, {id} placeholders.",
-          "examples": ["docs/meetings/{date}-{slug}/summary.md"]
+          "examples": ["raw/meetings/{date}-{slug}/summary.md"]
         },
         "dir": {
           "type": "string",
@@ -178,7 +178,7 @@
     },
     "effectivenessLog": {
       "type": "string",
-      "default": "docs/meetings/effectiveness-log.md",
+      "default": "raw/meetings/effectiveness-log.md",
       "description": "Path the per-meeting scorecard entries accumulate in."
     },
     "scorecardCadence": {

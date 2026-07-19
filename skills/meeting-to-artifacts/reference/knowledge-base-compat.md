@@ -16,7 +16,7 @@ pipeline (decision-009; vault side: decisions 001–004).
 3. `tags: [meeting/<artifact-type>]` — nested Obsidian tags, one `meeting` tree.
 4. Cross-artifact links: relative markdown links that resolve on GitHub **and** in a
    vault. No `[[wikilinks]]`, no absolute paths.
-5. Routed tree is vault-pointable: pointing Obsidian at `docs/meetings/` (or a parent)
+5. Routed tree is vault-pointable: pointing Obsidian at `raw/meetings/` (or a parent)
    just works; no links depending on files outside the tree.
 6. Transcripts are immutable raw sources; artifacts are the derived layer, backlinked
    via `sourceTranscript`.
@@ -26,12 +26,14 @@ pipeline (decision-009; vault side: decisions 001–004).
 
 ## Division of labor
 
-This skill routes artifacts to their own home (`docs/meetings/` by default) — never into
-the vault's `notes/`; the vault ingests those trees as *sources* and derives its own
-notes ("the vault never becomes a dumping ground for un-derived files",
-`knowledge-management/reference/vault-layout.md`). Entity resolution, indexing,
-staleness linting, and consolidation are the vault's job; `context.md`
-(glossary/ownership changes) is our richest feed into its entity notes.
+The repo-level taxonomy (decision-012): `raw/` holds captured knowledge inputs (this
+skill's artifacts under `raw/meetings/`), `knowledge/` holds only the vault's derived
+layer, `docs/` stays for repo-development docs. This skill routes artifacts into
+`raw/meetings/` by default — never into the vault's `notes/`; the vault ingests those
+trees as *sources* and derives its own notes ("the vault never becomes a dumping ground
+for un-derived files", `knowledge-management/reference/vault-layout.md`). Entity
+resolution, indexing, staleness linting, and consolidation are the vault's job;
+`context.md` (glossary/ownership changes) is our richest feed into its entity notes.
 
 `knowledgeBase.path` in `meeting-artifacts.config.yaml` should point at the vault root
 (the knowledge-management skill's `vault.path`, default `knowledge/`) — used to resolve
