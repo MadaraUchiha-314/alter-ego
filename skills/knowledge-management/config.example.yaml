@@ -1,0 +1,42 @@
+# knowledge.config.yaml — example config for the knowledge-management skill.
+# Copy to the target repo root and edit. Every key shown at its default unless noted.
+# Validated against config.schema.json.
+
+version: "0.1.0"
+
+vault:
+  path: knowledge          # vault root; point Obsidian here
+  name: alter-ego vault    # no default — used when seeding schema.md/index.md/log.md
+
+# Upstream systems knowledge is pulled from. Interface preference: mcp > cli > api
+# (api requires a public apiDocsUrl). Unregistered origins are still ingestable via
+# paste/file — they just can't be re-checked for upstream changes.
+sources:
+  - name: github
+    interface: mcp
+    mcpServer: github
+  - name: slack
+    interface: mcp
+    mcpServer: slack
+    notes: "read access to public channels only"
+  - name: google-docs
+    interface: cli
+    cli: gdoc-export
+  - name: meeting-artifacts
+    interface: cli
+    cli: git            # routed artifact trees live in git; pulled as files at a SHA
+
+staleness:
+  defaultTtlDays: 90
+  ttlDays:
+    entity: 180         # entities rot slower than syntheses
+    topic: 90
+    concept: 365        # glossary-shaped knowledge is the most durable
+  cadence: on-request   # on-request | weekly | monthly
+  checkUpstream: true   # diff upstream version markers during validate
+
+indexing:
+  tier: single-index    # single-index | per-folder | search-tool
+  # searchTool:         # optional at any tier; markdown indexes stay canonical
+  #   interface: cli
+  #   cli: qmd

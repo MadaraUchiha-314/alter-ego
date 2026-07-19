@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MadaraUchiha-314/alter-ego/skills/knowledge-management/config.schema.json",
+  "title": "knowledge-management skill config (knowledge.config.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Config format version.",
+      "default": "0.1.0"
+    },
+    "vault": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Vault root, relative to the repo root. Obsidian is pointed here.",
+          "default": "knowledge"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human name of the vault, used in seeded schema.md/index.md/log.md."
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Registry of upstream systems knowledge is pulled from. Origins not registered here can still be ingested via paste/file.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "interface"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Free-form origin name (e.g. github, slack, google-docs, meeting-artifacts)."
+          },
+          "interface": {
+            "type": "string",
+            "enum": ["mcp", "cli", "api"],
+            "description": "How to reach it. Preference order mcp > cli > api; api requires apiDocsUrl."
+          },
+          "mcpServer": {
+            "type": "string",
+            "description": "MCP server name, when interface is mcp."
+          },
+          "cli": {
+            "type": "string",
+            "description": "CLI executable, when interface is cli."
+          },
+          "apiDocsUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Public API documentation URL. Required when interface is api."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Free-form access/auth constraints worth knowing at refresh time."
+          }
+        },
+        "if": {
+          "properties": { "interface": { "const": "api" } }
+        },
+        "then": {
+          "required": ["name", "interface", "apiDocsUrl"]
+        }
+      }
+    },
+    "staleness": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultTtlDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Days after `updated` before a note without review_after flags needs-review.",
+          "default": 90
+        },
+        "ttlDays": {
+          "type": "object",
+          "description": "Per-note-type TTL overrides, keyed by front-matter type.",
+          "additionalProperties": { "type": "integer", "minimum": 1 },
+          "default": { "entity": 180, "topic": 90, "concept": 365 }
+        },
+        "cadence": {
+          "type": "string",
+          "enum": ["on-request", "weekly", "monthly"],
+          "description": "How often the validate lint is expected to run.",
+          "default": "on-request"
+        },
+        "checkUpstream": {
+          "type": "boolean",
+          "description": "Whether validate re-checks upstream version markers via the sources registry (push detection), in addition to TTLs.",
+          "default": true
+        }
+      }
+    },
+    "indexing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["single-index", "per-folder", "search-tool"],
+          "description": "Current index tier; consolidate proposes tiering up.",
+          "default": "single-index"
+        },
+        "searchTool": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Optional local search tool; markdown indexes stay canonical regardless.",
+          "required": ["interface"],
+          "properties": {
+            "interface": { "type": "string", "enum": ["mcp", "cli"] },
+            "mcpServer": { "type": "string" },
+            "cli": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

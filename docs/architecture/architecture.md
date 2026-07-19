@@ -5,4 +5,8 @@ here as they are added (`docs/architecture/<component>.md`).
 
 ## Components
 
-_No components documented yet. As work items land, link their architecture here._
+- **knowledge-management skill** (`skills/knowledge-management/`) — the knowledge
+  primitive: an Obsidian-compatible markdown vault (immutable `sources/` provenance
+  layer + derived `notes/` wiki + self-describing `schema.md`) that other alter-ego
+  skills produce into and consume from. Capability doc:
+  [knowledge-management](../capabilities/knowledge-management.md).
