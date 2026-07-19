@@ -5,6 +5,13 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
+| [011](./decision-011.md) | knowledge and code stay separate; no the-loop coupling | accepted | 2026-07-18 |
+| [010](./decision-010.md) | install caveman + ponytail; skill docs stay minimal | accepted | 2026-07-18 |
+| [009](./decision-009.md) | meeting artifacts follow an Obsidian-compatible knowledge-base contract | accepted | 2026-07-17 |
+| [008](./decision-008.md) | skill templates stay internal; only derived artifacts are routed | accepted | 2026-07-17 |
+| [007](./decision-007.md) | `meetingProvider.provider` is free-form, not a fixed enum | accepted | 2026-07-17 |
+| [006](./decision-006.md) | meeting-to-artifacts scopes ingest to Zoom, prefers MCP/CLI over raw API | accepted — point 1 superseded by 007 | 2026-07-17 |
+| [005](./decision-005.md) | meeting-to-artifacts is a human-reviewed, pluggable-routing skill | accepted | 2026-07-17 |
 | [004](./decision-004.md) | The vault is the shared knowledge primitive; connectors and search stay pluggable | accepted | 2026-07-18 |
 | [003](./decision-003.md) | Staleness is detected by machines and resolved by humans | accepted | 2026-07-18 |
 | [002](./decision-002.md) | Two-layer vault — immutable source records under `sources/`, derived notes under `notes/` | accepted | 2026-07-18 |

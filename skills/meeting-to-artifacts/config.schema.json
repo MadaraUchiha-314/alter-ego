@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MadaraUchiha-314/alter-ego/skills/meeting-to-artifacts/config.schema.json",
+  "title": "meeting-to-artifacts configuration",
+  "description": "Schema for meeting-artifacts.config.yaml at the target repo's root. Every field is optional; the skill falls back to the documented defaults (see config.example.yaml, reference/routing.md, reference/providers.md) when the file or a field is absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "filesystemDestination": {
+      "type": "object",
+      "description": "A plain filesystem path, not necessarily version-controlled.",
+      "additionalProperties": false,
+      "required": ["kind", "pathPattern"],
+      "properties": {
+        "kind": { "const": "filesystem" },
+        "pathPattern": {
+          "type": "string",
+          "description": "Path template. Supports {date}, {slug}, {seriesSlug}, {id} placeholders.",
+          "examples": ["/var/meeting-artifacts/{date}-{slug}/summary.md"]
+        }
+      }
+    },
+    "filesystemGitDestination": {
+      "type": "object",
+      "description": "A path inside a git repo (this repo by default, or another one named via `repo`). The default interface for most artifact types.",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "const": "filesystem-git" },
+        "repo": {
+          "type": "string",
+          "description": "owner/name of the repo to write into. Omit to use the current repo."
+        },
+        "style": {
+          "type": "string",
+          "enum": ["plain", "decision-log"],
+          "default": "plain",
+          "description": "plain: write pathPattern as-is. decision-log: this repo's ADR convention — one decision-<nnn>.md per decision under `dir`, plus a row appended to `dir`/decisions.md."
+        },
+        "pathPattern": {
+          "type": "string",
+          "description": "Required when style is plain. Supports {date}, {slug}, {seriesSlug}, {id} placeholders.",
+          "examples": ["docs/meetings/{date}-{slug}/summary.md"]
+        },
+        "dir": {
+          "type": "string",
+          "default": "docs/decisions",
+          "description": "Required when style is decision-log: directory holding decision-<nnn>.md and the decisions.md index."
+        }
+      }
+    },
+    "mcpDestination": {
+      "type": "object",
+      "description": "Interface via an already-configured MCP server. Recommended for any provider beyond plain filesystem (issue trackers, Notion, Google Docs, etc.) since it needs no bespoke integration code in the skill.",
+      "additionalProperties": false,
+      "required": ["kind", "server"],
+      "properties": {
+        "kind": { "const": "mcp" },
+        "server": {
+          "type": "string",
+          "description": "Name of the configured MCP server to write through, e.g. github, notion, google-docs.",
+          "examples": ["github", "notion"]
+        },
+        "resourceHint": {
+          "type": "string",
+          "description": "Free-form hint for where within the server this goes (a repo, a Notion database/page id, a Docs folder)."
+        },
+        "labels": { "type": "array", "items": { "type": "string" }, "description": "Applied when the server supports labeling (e.g. issue trackers)." }
+      }
+    },
+    "cliDestination": {
+      "type": "object",
+      "description": "Interface via a CLI already available in the environment. Use when no MCP server exists for the target system.",
+      "additionalProperties": false,
+      "required": ["kind", "command"],
+      "properties": {
+        "kind": { "const": "cli" },
+        "command": {
+          "type": "string",
+          "description": "CLI invocation template used to write the artifact, e.g. `gh issue create ...`."
+        },
+        "notes": { "type": "string", "description": "Anything the harness needs to know about auth/flags for this CLI." }
+      }
+    },
+    "artifactDestination": {
+      "description": "One destination per artifact type. See reference/routing.md for which kind to pick per artifact.",
+      "oneOf": [
+        { "$ref": "#/$defs/filesystemDestination" },
+        { "$ref": "#/$defs/filesystemGitDestination" },
+        { "$ref": "#/$defs/mcpDestination" },
+        { "$ref": "#/$defs/cliDestination" }
+      ]
+    },
+    "providerInterface": {
+      "type": "object",
+      "description": "How to talk to a configured provider (any input source or external system). MCP or CLI is recommended; api is only appropriate when the API is well-documented and public.",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["mcp", "cli", "api"],
+          "description": "mcp/cli are preferred — no bespoke integration to maintain. api requires apiDocsUrl and should only be used when no MCP/CLI integration exists."
+        },
+        "server": { "type": "string", "description": "Required when kind is mcp: the configured MCP server name." },
+        "command": { "type": "string", "description": "Required when kind is cli: the CLI invocation template." },
+        "apiDocsUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Required when kind is api: link to the provider's public API documentation. Do not configure kind: api against an undocumented/private API."
+        }
+      }
+    }
+  },
+  "properties": {
+    "provider": {
+      "type": "object",
+      "description": "The input source the raw material (e.g. a transcript) is pulled from. A general pattern, not meeting-specific. Free-form rather than a fixed enum, on purpose: the harness (Claude/Cursor/etc.) reads the name and the paired `interface` block and figures out how to talk to it, using judgement rather than schema validation as the gate. See reference/providers.md.",
+      "additionalProperties": false,
+      "required": ["name", "interface"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "zoom",
+          "description": "Source name, e.g. zoom, google-meet, teams. Only zoom has actually been exercised so far — if this names a source with no working interface configured/available, the harness should say so and ask rather than guessing at an integration.",
+          "examples": ["zoom"]
+        },
+        "interface": { "$ref": "#/$defs/providerInterface" }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "description": "Per-artifact-type destination. Unset types fall back to the filesystem-git defaults in reference/routing.md.",
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "$ref": "#/$defs/artifactDestination" },
+        "decisions": { "$ref": "#/$defs/artifactDestination" },
+        "requirements": { "$ref": "#/$defs/artifactDestination" },
+        "design": { "$ref": "#/$defs/artifactDestination" },
+        "tasks": { "$ref": "#/$defs/artifactDestination" },
+        "openQuestions": { "$ref": "#/$defs/artifactDestination" },
+        "risks": { "$ref": "#/$defs/artifactDestination" },
+        "disagreements": { "$ref": "#/$defs/artifactDestination" },
+        "context": { "$ref": "#/$defs/artifactDestination" }
+      }
+    },
+    "knowledgeBase": {
+      "type": "object",
+      "description": "Optional pointer to the knowledge-management skill's vault, used to resolve mentions (services, people) during extraction and as the context.md routing target. See reference/knowledge-base-compat.md.",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "description": "Vault root (the knowledge-management skill's vault.path; default knowledge/). A plain path or external reference also works when no vault exists.", "examples": ["knowledge"] },
+        "notes": { "type": "string", "description": "Free-form notes on how to query it." }
+      }
+    },
+    "series": {
+      "type": "array",
+      "description": "Recurring meetings this skill tracks, for pre-reads and the cancellation-candidate audit.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "title"],
+        "properties": {
+          "slug": { "type": "string", "description": "Stable identifier used in path patterns and to look up the previous occurrence." },
+          "title": { "type": "string" },
+          "cadence": { "type": "string", "description": "Free-form, e.g. weekly, biweekly.", "examples": ["weekly"] },
+          "preReadCadence": {
+            "type": "string",
+            "enum": ["every-occurrence", "on-request", "never"],
+            "default": "on-request"
+          },
+          "publishChannel": {
+            "type": "string",
+            "description": "Where to post pre-reads and post-meeting summaries for attendee visibility, e.g. a Slack channel. Free-form; requires the corresponding integration."
+          }
+        }
+      }
+    },
+    "effectivenessLog": {
+      "type": "string",
+      "default": "docs/meetings/effectiveness-log.md",
+      "description": "Path the per-meeting scorecard entries accumulate in."
+    },
+    "scorecardCadence": {
+      "type": "string",
+      "enum": ["weekly", "monthly", "on-request"],
+      "default": "on-request",
+      "description": "How often to proactively suggest generating a rolled-up scorecard. on-request never triggers automatically."
+    }
+  }
+}
