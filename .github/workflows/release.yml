@@ -1,0 +1,50 @@
+name: release
+
+# Semantic release on merge to main (issue #8, decision-016). Runs
+# semantic-release, which derives the version bump from Conventional Commits
+# since the last tag, stamps .claude-plugin/plugin.json (via scripts/set-version.ts),
+# updates the changelog, commits, tags v<version>, and creates the GitHub release.
+#
+# The bump commit is pushed with GITHUB_TOKEN (which does not re-trigger
+# workflows) and carries [skip ci], so this cannot loop.
+#
+# Package manager: bun (repo convention, .the-loop/config.yaml). Node is still
+# the runtime for the release tooling — node_modules/.bin shims carry node
+# shebangs — bun does the installing; setup-node provides a pinned node.
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write # commit the bump, push the tag, create the release
+  issues: write # semantic-release/github: comment on released issues
+  pull-requests: write # semantic-release/github: comment on released PRs
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history + tags for bump derivation
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: bun install --frozen-lockfile
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bun run release
