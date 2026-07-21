@@ -1,0 +1,60 @@
+# .alter-ego/manifest.yaml
+# Written by alter-ego:init, read + reconciled by alter-ego:upgrade.
+# Records what the alter-ego plugin created in this repo, at what version, and which
+# files are managed (reconciled on upgrade) vs user-owned (never touched).
+# Validated against skills/init/manifest.schema.json.
+#
+# Template note (do not copy this comment into a repo): seed via alter-ego:init with
+# real values — the plugin version read from .claude-plugin/plugin.json, today's date,
+# and only the skills/primitives actually set up. Never copy this blank template in.
+
+manifestVersion: "0.1.0"
+alterEgoVersion: "0.1.0"     # plugin.json version at last init/upgrade — upgrade diffs this
+initialized: "<YYYY-MM-DD>"
+updated: "<YYYY-MM-DD>"
+
+# Skills set up in this repo. Each records its opt-in config (schema is managed, values
+# are user-owned) and the plugin version that last seeded/reconciled it.
+skills:
+  - name: knowledge-management
+    enabled: true
+    config:
+      path: knowledge.config.yaml
+      present: true            # false when the skill is left on defaults (no config file)
+      managed: false           # values are user-owned; only schema migrations touch them
+      schema: skills/knowledge-management/config.schema.json
+    seededVersion: "0.1.0"
+  - name: meeting-to-artifacts
+    enabled: true
+    config:
+      path: meeting-artifacts.config.yaml
+      present: true
+      managed: false
+      schema: skills/meeting-to-artifacts/config.schema.json
+    seededVersion: "0.1.0"
+
+# Shared primitives seeded up front. The knowledge vault is the main one; its schema.md
+# is the managed migration target, everything else in it is user/skill-owned.
+primitives:
+  - name: knowledge-vault
+    root: knowledge/           # mirrors knowledge-management vault.path
+    seededVersion: "0.1.0"     # plugin version whose schema.md conventions this vault carries
+    files:
+      - path: knowledge/schema.md
+        role: vault-contract
+        managed: true          # conventions reconciled on upgrade, review-gated
+      - path: knowledge/index.md
+        role: vault-index
+        managed: false
+      - path: knowledge/log.md
+        role: vault-log
+        managed: false
+      - path: knowledge/sources/index.md
+        role: sources-index
+        managed: false
+
+# Composition with other plugins present in the repo (compose, never duplicate).
+integrations:
+  the-loop:
+    present: false             # true when .the-loop/ exists
+    registered: false          # true once alter-ego skills are listed in external-tools.md
