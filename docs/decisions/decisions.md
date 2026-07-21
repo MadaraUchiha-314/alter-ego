@@ -5,6 +5,7 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
+| [015](./decision-015.md) | meeting-radar is a discovery-only pipe from email/calendar into meeting-to-artifacts | accepted | 2026-07-21 |
 | [014](./decision-014.md) | plugin lifecycle skills — `alter-ego:init` seeds, `alter-ego:upgrade` reconciles | accepted | 2026-07-21 |
 | [013](./decision-013.md) | no meeting artifact defaults into `docs/` — decisions included | accepted | 2026-07-19 |
 | [012](./decision-012.md) | `raw/` for captured inputs, `knowledge/` for derived — not `docs/` | accepted — carve-out superseded by 013 | 2026-07-19 |
