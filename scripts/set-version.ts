@@ -4,9 +4,9 @@
  *
  * semantic-release computes the next version from Conventional Commits but has
  * no built-in writer for a non-package.json file, so it invokes this via
- * @semantic-release/exec's prepareCmd:
+ * @semantic-release/exec's prepareCmd (bun runs TypeScript natively):
  *
- *   npx tsx scripts/set-version.ts <version>
+ *   bun scripts/set-version.ts <version>
  *
  * @semantic-release/git then commits the changed plugin.json alongside the
  * changelog. This is the only bespoke code in the release path; everything else

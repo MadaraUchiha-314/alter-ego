@@ -57,9 +57,12 @@ non-`package.json` version file. Everything else is off-the-shelf plugins config
 - **Branch protection.** `release.yml` pushes the bump commit and tag back to `main`, so
   protection must allow the Action to push (or the job must be given a PAT). This is the one
   operational prerequisite.
-- **Authoring commits.** `npm run commit` launches commitizen for a guided Conventional
-  Commit; `npm run commitlint` lints locally.
-- **Preview locally.** `npx semantic-release --dry-run --no-ci` prints what a release from
+- **Package manager: bun** (the repo's declared TS package manager,
+  `.the-loop/config.yaml`). `bun install --frozen-lockfile` in CI against the committed
+  `bun.lock`; bun also runs `scripts/set-version.ts` natively, so no `tsx`/build step.
+- **Authoring commits.** `bun run commit` launches commitizen for a guided Conventional
+  Commit; `bun run commitlint` lints locally.
+- **Preview locally.** `bunx semantic-release --dry-run --no-ci` prints what a release from
   `main` would produce, publishing nothing.
 - **No-op merges are fine.** A `docs:`/`chore:` merge derives no bump and releases nothing.
 

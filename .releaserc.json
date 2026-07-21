@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "npx tsx scripts/set-version.ts ${nextRelease.version}"
+        "prepareCmd": "bun scripts/set-version.ts ${nextRelease.version}"
       }
     ],
     [

@@ -39,7 +39,7 @@ unavoidable piece of glue written in TypeScript:
   TypeScript script to stamp it. This is the only bespoke code in the release path.
 - **Commit convention — `commitlint` + `commitizen`.** `pr-validation.yml` runs
   `@commitlint/cli` (config `@commitlint/config-conventional`) over the **PR title**;
-  `commitizen` (`npm run commit`) is offered for authoring. Config is declarative
+  `commitizen` (`bun run commit`) is offered for authoring. Config is declarative
   (`.releaserc.json`, `.commitlintrc.json`) — no hand-written JS.
 - The bump commit is pushed with `GITHUB_TOKEN` (which does not re-trigger workflows) and
   carries `[skip ci]`, so the release cannot loop.
@@ -71,7 +71,8 @@ from commits after it. Documented as an operational step in the capability doc.
 
 - Versioning is automatic and built on a maintained, widely-audited toolchain rather than
   bespoke parsing: less code to own, standard behaviour contributors already know.
-- The plugin now carries a `package.json` + `package-lock.json` and a `node_modules` dev
+- The plugin now carries a `package.json` + `bun.lock` (bun is the package manager, per
+  `.the-loop/config.yaml` `tooling.packageManager.ts`) and a `node_modules` dev
   install in CI — a toolchain footprint the markdown plugin did not previously have. Scoped
   to `devDependencies` and CI; the shipped plugin is unaffected.
 - The release job pushes a commit and tag to `main`, so branch protection must allow the

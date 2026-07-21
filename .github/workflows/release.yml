@@ -7,6 +7,10 @@ name: release
 #
 # The bump commit is pushed with GITHUB_TOKEN (which does not re-trigger
 # workflows) and carries [skip ci], so this cannot loop.
+#
+# Package manager: bun (repo convention, .the-loop/config.yaml). Node is still
+# the runtime for the release tooling — node_modules/.bin shims carry node
+# shebangs — bun does the installing; setup-node provides a pinned node.
 
 on:
   push:
@@ -30,14 +34,17 @@ jobs:
           fetch-depth: 0 # full history + tags for bump derivation
           persist-credentials: false
 
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
-      - run: npm ci
+      - run: bun install --frozen-lockfile
 
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: bun run release
