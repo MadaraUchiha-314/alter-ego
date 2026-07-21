@@ -144,6 +144,3 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
-
-# Ephemeral release notes written by .github/scripts/derive-release.mjs
-release-notes.md

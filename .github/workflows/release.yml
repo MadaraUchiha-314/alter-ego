@@ -1,81 +1,43 @@
 name: release
 
-# Semantic release on merge to main (issue #8, decision-016). Derives the
-# version bump from conventional commits since the last tag, writes it into
-# .claude-plugin/plugin.json (the single source of truth), updates the
-# changelog, commits, tags v<version>, and cuts a GitHub release.
+# Semantic release on merge to main (issue #8, decision-016). Runs
+# semantic-release, which derives the version bump from Conventional Commits
+# since the last tag, stamps .claude-plugin/plugin.json (via scripts/set-version.ts),
+# updates the changelog, commits, tags v<version>, and creates the GitHub release.
 #
-# The release commit is pushed with GITHUB_TOKEN, which by design does NOT
-# re-trigger workflows, so this cannot loop.
+# The bump commit is pushed with GITHUB_TOKEN (which does not re-trigger
+# workflows) and carries [skip ci], so this cannot loop.
 
 on:
   push:
     branches: [main]
 
-# Never run two releases at once; let an in-flight one finish.
 concurrency:
   group: release
   cancel-in-progress: false
 
 permissions:
   contents: write # commit the bump, push the tag, create the release
+  issues: write # semantic-release/github: comment on released issues
+  pull-requests: write # semantic-release/github: comment on released PRs
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    # Skip the release job's own bump commit to be safe (belt-and-braces
-    # alongside GITHUB_TOKEN's no-retrigger guarantee).
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # full history + tags for bump derivation
-          fetch-tags: true
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      - name: Derive release
-        id: derive
+      - run: npm ci
+
+      - name: Release
         env:
-          RELEASE_NOTES_FILE: ${{ runner.temp }}/release-notes.md
-        run: node .github/scripts/derive-release.mjs
-
-      - name: Commit, tag, and push
-        if: steps.derive.outputs.released == 'true'
-        env:
-          VERSION: ${{ steps.derive.outputs.version }}
-          TAG: ${{ steps.derive.outputs.tag }}
-          BUMP: ${{ steps.derive.outputs.bump }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Seed release: no version edit, just establish the baseline tag.
-          if [ "$BUMP" = "seed" ]; then
-            if git ls-remote --tags --exit-code origin "refs/tags/$TAG" >/dev/null 2>&1; then
-              echo "Tag $TAG already exists on origin; nothing to seed."
-              exit 0
-            fi
-            git tag -a "$TAG" -m "$TAG"
-            git push origin "refs/tags/$TAG"
-            exit 0
-          fi
-
-          git add .claude-plugin/plugin.json CHANGELOG.md
-          git commit -m "chore(release): $TAG"
-          git tag -a "$TAG" -m "$TAG"
-          git push origin HEAD:main
-          git push origin "refs/tags/$TAG"
-
-      - name: Create GitHub release
-        if: steps.derive.outputs.released == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.derive.outputs.tag }}
-          NOTES: ${{ runner.temp }}/release-notes.md
-        run: |
-          set -euo pipefail
-          gh release create "$TAG" --title "$TAG" --notes-file "$NOTES" --verify-tag
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

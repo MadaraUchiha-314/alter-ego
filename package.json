@@ -1,0 +1,31 @@
+{
+  "name": "alter-ego",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Release tooling for the alter-ego Claude Code plugin. The plugin itself is markdown skills; this package only pins the off-the-shelf release/commit toolchain (semantic-release, commitlint, commitizen).",
+  "type": "module",
+  "scripts": {
+    "commit": "cz",
+    "commitlint": "commitlint",
+    "release": "semantic-release"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@types/node": "^22.10.5",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "semantic-release": "^24.2.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

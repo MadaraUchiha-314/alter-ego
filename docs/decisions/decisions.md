@@ -5,7 +5,7 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
-| [016](./decision-016.md) | automate plugin versioning with a zero-dependency semantic release, enforced at PR time | accepted | 2026-07-21 |
+| [016](./decision-016.md) | automate plugin versioning with semantic-release, enforced at PR time with commitlint | accepted | 2026-07-21 |
 | [015](./decision-015.md) | meeting-radar is a discovery-only pipe from email/calendar into meeting-to-artifacts | accepted | 2026-07-21 |
 | [014](./decision-014.md) | plugin lifecycle skills — `alter-ego:init` seeds, `alter-ego:upgrade` reconciles | accepted | 2026-07-21 |
 | [013](./decision-013.md) | no meeting artifact defaults into `docs/` — decisions included | accepted | 2026-07-19 |
