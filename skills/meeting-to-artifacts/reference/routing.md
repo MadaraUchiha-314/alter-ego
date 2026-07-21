@@ -8,10 +8,11 @@ stay configurable.
 
 - `filesystem` — plain path, not version-controlled. Rare.
 - `filesystem-git` — path in a git repo (current repo default, or `repo: owner/name`).
-  Default for most artifacts. `style: decision-log` = ADR convention: one
-  `decision-<nnn>.md` per decision (next nnn = max + 1, zero-padded) + row appended to
-  the `decisions.md` index. Check for an existing decisions index before using a flat
-  file for decisions.
+  Default for all artifacts, including `decisions.md`, under `raw/meetings/`.
+  `style: decision-log` is **opt-in only** (never a default — a repo's `docs/` belongs
+  to its own development docs, decision-013): ADR convention writing one
+  `decision-<nnn>.md` per decision (next nnn = max + 1, zero-padded) + a row appended
+  to the `decisions.md` index in the configured `dir`.
 - `mcp` — write via a configured MCP server (`server:` name). Preferred for anything
   non-filesystem: issue trackers, Notion, Google Docs. Tasks via tracker: one issue per
   task, title = summary, body = context + meeting link, assignee = owner, `labels:` if

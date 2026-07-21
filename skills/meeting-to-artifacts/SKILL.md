@@ -75,9 +75,9 @@ Per `storage` config (`reference/routing.md`). Defaults:
 
 | Artifact | Default destination |
 |---|---|
-| `summary.md`, `risks.md`, `disagreements.md`, `tasks.md`, `open-questions.md`, `context.md` | `raw/meetings/<date>-<slug>/<name>.md` |
-| `decisions.md` | `docs/decisions/decision-<nnn>.md` per decision + index row |
+| `summary.md`, `decisions.md`, `risks.md`, `disagreements.md`, `tasks.md`, `open-questions.md`, `context.md` | `raw/meetings/<date>-<slug>/<name>.md` |
 | `requirements.md`, `design.md` | `raw/meetings/<date>-<slug>/` |
+| `decisions.md` (only if `storage.decisions` opts into `style: decision-log`) | one `decision-<nnn>.md` per decision + index row in the configured `dir` |
 | `tasks.md` (if `storage.tasks` is `mcp`/`cli`) | one tracker issue per task, owner as assignee |
 | `context.md` (if `knowledgeBase` set) | appended to the knowledge base |
 

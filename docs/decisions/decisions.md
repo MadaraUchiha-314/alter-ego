@@ -5,7 +5,8 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
-| [012](./decision-012.md) | `raw/` for captured inputs, `knowledge/` for derived — not `docs/` | accepted | 2026-07-19 |
+| [013](./decision-013.md) | no meeting artifact defaults into `docs/` — decisions included | accepted | 2026-07-19 |
+| [012](./decision-012.md) | `raw/` for captured inputs, `knowledge/` for derived — not `docs/` | accepted — carve-out superseded by 013 | 2026-07-19 |
 | [011](./decision-011.md) | knowledge and code stay separate; no the-loop coupling | accepted | 2026-07-18 |
 | [010](./decision-010.md) | install caveman + ponytail; skill docs stay minimal | accepted | 2026-07-18 |
 | [009](./decision-009.md) | meeting artifacts follow an Obsidian-compatible knowledge-base contract | accepted | 2026-07-17 |

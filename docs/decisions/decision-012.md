@@ -1,7 +1,7 @@
 # Decision 012: `raw/` for captured inputs, `knowledge/` for derived — not `docs/`
 
 - **Status:** accepted — supersedes the `docs/meetings/` default named in decisions
-  005/009
+  005/009; its own `docs/decisions/` carve-out is superseded by decision-013
 - **Date:** 2026-07-19
 - **Deciders:** @MadaraUchiha-314 (PR review comment)
 - **Work item:** issue-2 / PR #4

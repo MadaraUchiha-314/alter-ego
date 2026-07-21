@@ -17,8 +17,9 @@ provider:
 storage:
   decisions:
     kind: filesystem-git
-    style: decision-log
-    dir: docs/decisions        # this repo's existing docs/decisions/ convention
+    pathPattern: "raw/meetings/{date}-{slug}/decisions.md"
+    # style: decision-log      # opt-in ADR routing; never defaults into a repo's docs/
+    # dir: docs/decisions
 
   requirements:
     kind: filesystem-git

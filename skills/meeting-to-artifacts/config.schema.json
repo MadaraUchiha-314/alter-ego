@@ -44,8 +44,8 @@
         },
         "dir": {
           "type": "string",
-          "default": "docs/decisions",
-          "description": "Required when style is decision-log: directory holding decision-<nnn>.md and the decisions.md index."
+          "description": "Required when style is decision-log: directory holding decision-<nnn>.md and the decisions.md index, e.g. docs/decisions. No default — decision-log routing is opt-in and must name its own dir (decision-013).",
+          "examples": ["docs/decisions"]
         }
       }
     },

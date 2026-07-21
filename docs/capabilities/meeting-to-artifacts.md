@@ -62,13 +62,14 @@ for building alter-ego itself (decision-011).
 `config.schema.json`, `config.example.yaml`. Decisions: 005 routing/review gate, 006
 MCP/CLI/API interface model, 007 free-form provider name, 008 templates stay internal,
 009 knowledge-base contract, 010 minimal docs + caveman/ponytail, 011 knowledge/code
-boundary, 012 `raw/`/`knowledge/`/`docs/` layout. The vault contract itself is owned by
-the knowledge-management skill (decisions 001–004).
+boundary, 012 `raw/`/`knowledge/`/`docs/` layout, 013 `docs/` untouched by default. The
+vault contract itself is owned by the knowledge-management skill (decisions 001–004).
 
 ## History
 
 | Work item | What changed | Links |
 |-----------|--------------|-------|
+| issue-2 | Decisions no longer default into `docs/decisions/` — all artifacts default under `raw/meetings/`; ADR routing is opt-in with an explicit `dir` | [decision](../decisions/decision-013.md), PR [#4](https://github.com/MadaraUchiha-314/alter-ego/pull/4) |
 | issue-2 | Default routing tree moved `docs/meetings/` → `raw/meetings/`: `raw/` = captured inputs, `knowledge/` = derived vault, `docs/` = repo-development docs | [decision](../decisions/decision-012.md), PR [#4](https://github.com/MadaraUchiha-314/alter-ego/pull/4) |
 | issue-2 | Knowledge/code boundary: removed implementation chaining and all the-loop coupling; generalized `meetingProvider` → `provider` (input sources aren't meeting-specific) | [decision](../decisions/decision-011.md), PR [#4](https://github.com/MadaraUchiha-314/alter-ego/pull/4) |
 | issue-2 | Compressed all skill docs (~50% fewer tokens, rules unchanged); installed caveman + ponytail plugins | [decision](../decisions/decision-010.md), PR [#4](https://github.com/MadaraUchiha-314/alter-ego/pull/4) |
