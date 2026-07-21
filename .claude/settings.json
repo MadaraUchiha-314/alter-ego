@@ -80,10 +80,27 @@
       "source": {
         "source": "github",
         "repo": "MadaraUchiha-314/the-loop"
-      }
+      },
+      "autoUpdate": true
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      },
+      "autoUpdate": true
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      },
+      "autoUpdate": true
     }
   },
   "enabledPlugins": {
-    "the-loop@the-loop": true
+    "the-loop@the-loop": true,
+    "caveman@caveman": true,
+    "ponytail@ponytail": true
   }
 }

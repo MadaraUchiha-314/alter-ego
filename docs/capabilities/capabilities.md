@@ -9,3 +9,4 @@ behaviour (a ready-to-ship gate item).
 | Capability | What it covers |
 |------------|----------------|
 | [knowledge-management](./knowledge-management.md) | The knowledge primitive: an Obsidian-compatible markdown vault with provenance-carrying source records, staleness validation, tiered indexing, and pluggable source connectors |
+| [meeting-to-artifacts](./meeting-to-artifacts.md) | Turns a meeting transcript into reviewed, durable knowledge artifacts (decisions, requirements, tasks, open questions, risks, disagreements, design/ADR, summary, context) routed to pluggable storage, with pre-reads and an effectiveness scorecard; feeds the knowledge vault as its `meeting-artifact` origin |

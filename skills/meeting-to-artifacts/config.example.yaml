@@ -1,0 +1,75 @@
+# meeting-artifacts.config.yaml
+# Copy this file to the target repo's root (as `meeting-artifacts.config.yaml`) and adjust.
+# Validated against config.schema.json in this skill directory. Every key is optional —
+# anything omitted falls back to the defaults documented in reference/routing.md and
+# reference/providers.md.
+
+provider:
+  name: zoom                   # free-form (see reference/providers.md) — only zoom is actually exercised today
+  interface:
+    kind: mcp                  # mcp/cli preferred over api; api requires apiDocsUrl to a public doc
+    server: zoom                # name of the configured MCP server that exposes Zoom recordings/transcripts
+    # kind: cli
+    # command: "zoom-cli transcripts get {meetingId}"
+    # kind: api
+    # apiDocsUrl: "https://developers.zoom.us/docs/api/"
+
+storage:
+  decisions:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/decisions.md"
+    # style: decision-log      # opt-in ADR routing; never defaults into a repo's docs/
+    # dir: docs/decisions
+
+  requirements:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/requirements.md"
+
+  design:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/design.md"
+
+  summary:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/summary.md"
+
+  tasks:
+    kind: filesystem-git       # switch to mcp/cli once an issue tracker integration is wired up
+    pathPattern: "raw/meetings/{date}-{slug}/tasks.md"
+    # kind: mcp
+    # server: github
+    # resourceHint: MadaraUchiha-314/alter-ego
+    # labels: ["meeting-followup"]
+
+  openQuestions:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/open-questions.md"
+
+  risks:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/risks.md"
+
+  disagreements:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/disagreements.md"
+
+  context:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/context.md"
+    # kind: mcp                # e.g. once an mcp server for Notion/Google Docs is configured
+    # server: notion
+    # resourceHint: "Team Wiki > Glossary"
+
+knowledgeBase:
+  path: knowledge               # the knowledge-management skill's vault root (vault.path)
+  notes: ""
+
+series: []
+  # - slug: weekly-design-review
+  #   title: "Weekly design review"
+  #   cadence: weekly
+  #   preReadCadence: every-occurrence
+  #   publishChannel: "#design-reviews"
+
+effectivenessLog: raw/meetings/effectiveness-log.md
+scorecardCadence: on-request
