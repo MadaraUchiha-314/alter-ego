@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MadaraUchiha-314/alter-ego/skills/init/manifest.schema.json",
+  "title": "alter-ego plugin manifest (.alter-ego/manifest.yaml)",
+  "description": "State written by alter-ego:init and read/reconciled by alter-ego:upgrade. Records what the plugin created in a repo, at what version, and which files are managed (reconciled on upgrade) vs user-owned (never touched).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifestVersion", "alterEgoVersion", "skills"],
+  "properties": {
+    "manifestVersion": {
+      "type": "string",
+      "description": "Schema version of this manifest file itself.",
+      "default": "0.1.0"
+    },
+    "alterEgoVersion": {
+      "type": "string",
+      "description": "The plugin.json `version` at the last init/upgrade. The single source of truth `upgrade` diffs against."
+    },
+    "initialized": {
+      "type": "string",
+      "format": "date",
+      "description": "Date alter-ego:init first ran in this repo (YYYY-MM-DD)."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the last init/upgrade pass (YYYY-MM-DD)."
+    },
+    "skills": {
+      "type": "array",
+      "description": "Alter-ego skills init offered/enabled in this repo, with the plugin version that last seeded/reconciled each.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "enabled", "seededVersion"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Skill directory name under skills/ (e.g. knowledge-management)."
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether this skill is set up in this repo."
+          },
+          "config": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The skill's opt-in config file, if it has one.",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Config file path relative to repo root (e.g. knowledge.config.yaml)."
+              },
+              "present": {
+                "type": "boolean",
+                "description": "Whether the file exists in the repo. Absent means the skill runs on defaults."
+              },
+              "managed": {
+                "type": "boolean",
+                "description": "Always false: values are user-owned. Only schema migrations touch it, review-gated.",
+                "default": false
+              },
+              "schema": {
+                "type": "string",
+                "description": "Path to the config's JSON schema inside the plugin (the managed side)."
+              }
+            }
+          },
+          "seededVersion": {
+            "type": "string",
+            "description": "Plugin version that last seeded/reconciled this skill's managed artifacts. `upgrade` diffs this per-skill."
+          }
+        }
+      }
+    },
+    "primitives": {
+      "type": "array",
+      "description": "Shared primitives seeded up front (chiefly the knowledge vault), with per-artifact managed/version state.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "seededVersion"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Primitive identifier (e.g. knowledge-vault)."
+          },
+          "root": {
+            "type": "string",
+            "description": "Root path of the primitive relative to repo root (e.g. knowledge/)."
+          },
+          "seededVersion": {
+            "type": "string",
+            "description": "Plugin version whose conventions this primitive was seeded with. The migrate-from target for `upgrade`."
+          },
+          "files": {
+            "type": "array",
+            "description": "Individual seeded files and whether upgrade may reconcile them.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "managed"],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "description": "File path relative to repo root."
+                },
+                "role": {
+                  "type": "string",
+                  "description": "What the file is (e.g. vault-contract, vault-index, vault-log)."
+                },
+                "managed": {
+                  "type": "boolean",
+                  "description": "true → conventions may be reconciled on upgrade (review-gated). false → user/skill-owned content, never touched."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Composition with other plugins present in the repo.",
+      "properties": {
+        "the-loop": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "present": {
+              "type": "boolean",
+              "description": "true when a .the-loop/ directory exists in the repo."
+            },
+            "registered": {
+              "type": "boolean",
+              "description": "true once alter-ego skills are listed in .the-loop/external-tools.md."
+            }
+          }
+        }
+      }
+    }
+  }
+}
