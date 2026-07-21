@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MadaraUchiha-314/alter-ego/skills/meeting-radar/config.schema.json",
+  "title": "meeting-radar configuration",
+  "description": "Schema for meeting-radar.config.yaml at the target repo's root. Every field is optional; the skill falls back to the documented defaults (see config.example.yaml, reference/sources.md, reference/detection.md) when the file or a field is absent.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "providerInterface": {
+      "type": "object",
+      "description": "How to talk to a configured source. MCP or CLI is recommended; api is only appropriate when the API is well-documented and public. Same shape used by meeting-to-artifacts and knowledge-management.",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["mcp", "cli", "api"],
+          "description": "mcp/cli are preferred — no bespoke integration to maintain. api requires apiDocsUrl and should only be used when no MCP/CLI integration exists."
+        },
+        "server": { "type": "string", "description": "Required when kind is mcp: the configured MCP server name (e.g. gmail, google-calendar, outlook)." },
+        "command": { "type": "string", "description": "Required when kind is cli: the CLI invocation template." },
+        "apiDocsUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "Required when kind is api: link to the source's public API documentation. Do not configure kind: api against an undocumented/private API."
+        }
+      }
+    },
+    "sourceName": {
+      "type": "string",
+      "description": "Free-form source name, harness-interpreted (no fixed enum, per decision-007), e.g. google-calendar, outlook, gmail. If it names a source with no working interface configured/available, the harness should say so and ask rather than guessing an integration."
+    }
+  },
+  "properties": {
+    "sources": {
+      "type": "object",
+      "description": "The two input systems radar scans. Either may be omitted — radar works from whichever is configured (calendar-only, email-only, or both).",
+      "additionalProperties": false,
+      "properties": {
+        "calendar": {
+          "type": "object",
+          "description": "A calendar system plus how to reach it.",
+          "additionalProperties": false,
+          "required": ["name", "interface"],
+          "properties": {
+            "name": { "$ref": "#/$defs/sourceName" },
+            "interface": { "$ref": "#/$defs/providerInterface" },
+            "calendars": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Which calendars to scan. Default: the primary calendar only.",
+              "default": ["primary"]
+            }
+          }
+        },
+        "email": {
+          "type": "object",
+          "description": "A mailbox plus how to reach it.",
+          "additionalProperties": false,
+          "required": ["name", "interface"],
+          "properties": {
+            "name": { "$ref": "#/$defs/sourceName" },
+            "interface": { "$ref": "#/$defs/providerInterface" },
+            "mailboxes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Which mailboxes/labels to scan. Default: INBOX.",
+              "default": ["INBOX"]
+            }
+          }
+        }
+      }
+    },
+    "scan": {
+      "type": "object",
+      "description": "What window to scan and how to recognize a meeting-related email.",
+      "additionalProperties": false,
+      "properties": {
+        "window": {
+          "type": "string",
+          "default": "7d",
+          "description": "Lookback window, e.g. 7d, 48h, 2w. How far back to scan email and calendar.",
+          "examples": ["7d", "48h"]
+        },
+        "signals": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Heuristics that mark an email as meeting-related. See reference/detection.md.",
+          "properties": {
+            "senders": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Sender addresses/domains that indicate a recording or summary email.",
+              "examples": [["no-reply@zoom.us", "meetings-noreply@google.com", "fred@fireflies.ai", "no-reply@otter.ai"]]
+            },
+            "subjectPatterns": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Subject substrings/patterns that indicate a meeting recording, transcript, or summary.",
+              "examples": [["recording is ready", "meeting summary", "transcript", "notes from"]]
+            },
+            "recordingLinkHosts": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Hosts whose links, when present in a body, count as a recording/transcript.",
+              "examples": [["zoom.us", "drive.google.com", "fireflies.ai", "otter.ai"]]
+            }
+          }
+        }
+      }
+    },
+    "correlation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How email signals are matched to calendar events.",
+      "properties": {
+        "matchWindowHours": {
+          "type": "number",
+          "default": 24,
+          "description": "Maximum gap between an event's time and an email's timestamp for the two to be correlated into the same candidate."
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where approved candidates go and how re-processing is prevented.",
+      "properties": {
+        "skill": {
+          "type": "string",
+          "default": "meeting-to-artifacts",
+          "description": "The downstream skill each approved candidate is handed to (at its Ingest step)."
+        },
+        "meetingArtifactsConfig": {
+          "type": "string",
+          "description": "Path to the meeting-to-artifacts config (meeting-artifacts.config.yaml), read to reuse its `series` registry when correlating and to know its output tree for dedup.",
+          "examples": ["meeting-artifacts.config.yaml"]
+        },
+        "processedLog": {
+          "type": "string",
+          "default": "raw/meetings/processed-sources.md",
+          "description": "Append-only ledger of already-handed-off meeting sources (metadata + links only, never message contents), used to dedup on subsequent scans."
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Controls how much email radar reads and whether any handoff is automatic. See reference/privacy.md.",
+      "properties": {
+        "reviewGate": {
+          "type": "string",
+          "enum": ["always", "auto-known-series"],
+          "default": "always",
+          "description": "always: the user confirms every candidate before handoff. auto-known-series: occurrences of a known `series` may be pre-selected in the digest, but the digest is still shown and remains deselectable — never a silent auto-ingest."
+        },
+        "bodyAccess": {
+          "type": "string",
+          "enum": ["metadata-first", "full"],
+          "default": "metadata-first",
+          "description": "metadata-first: read headers/subjects/senders to detect candidates; open a full body only to extract a link/summary from a message already matched as a candidate. full: bodies may be read during detection (use only when the mailbox is dedicated to meeting notifications)."
+        }
+      }
+    }
+  }
+}

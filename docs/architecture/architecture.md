@@ -16,3 +16,13 @@ here as they are added (`docs/architecture/<component>.md`).
   `meeting-artifact` origin. See
   [capability doc](../capabilities/meeting-to-artifacts.md) and
   [decision-005](../decisions/decision-005.md).
+- **meeting-radar skill** (`skills/meeting-radar/`) — the discovery front-end: scans
+  email + calendar for meetings and their recording/transcript/summary links, correlates
+  and dedups them, and hands human-reviewed candidates to `meeting-to-artifacts` at its
+  Ingest step. Discovery + handoff only — it extracts nothing and stores nothing. See
+  [capability doc](../capabilities/meeting-radar.md) and
+  [decision-015](../decisions/decision-015.md).
+
+The end-to-end flow across the three skills is one seam per skill:
+`meeting-radar` (find + route) → `meeting-to-artifacts` (extract + review + route) →
+`knowledge-management` (store).

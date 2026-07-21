@@ -1,0 +1,55 @@
+# meeting-radar.config.yaml
+# Copy this file to the target repo's root (as `meeting-radar.config.yaml`) and adjust.
+# Validated against config.schema.json in this skill directory. Every key is optional —
+# anything omitted falls back to the defaults documented in reference/sources.md,
+# reference/detection.md, and reference/privacy.md.
+
+sources:
+  calendar:
+    name: google-calendar        # free-form (see reference/sources.md); harness-interpreted
+    interface:
+      kind: mcp                   # mcp/cli preferred over api; api requires apiDocsUrl to a public doc
+      server: google-calendar     # name of the configured MCP server exposing the calendar
+    calendars: ["primary"]
+
+  email:
+    name: gmail
+    interface:
+      kind: mcp
+      server: gmail               # name of the configured MCP server exposing the mailbox
+      # kind: cli
+      # command: "gmail-cli search --query {query}"
+      # kind: api
+      # apiDocsUrl: "https://developers.google.com/gmail/api"
+    mailboxes: ["INBOX"]
+
+scan:
+  window: 7d                      # how far back to scan (e.g. 7d, 48h, 2w)
+  signals:
+    senders:                      # who tends to send recording/summary mail
+      - no-reply@zoom.us
+      - meetings-noreply@google.com
+      - no-reply@otter.ai
+      - fred@fireflies.ai
+    subjectPatterns:              # subject substrings that flag a meeting source
+      - "recording is ready"
+      - "meeting summary"
+      - "transcript"
+      - "notes from"
+    recordingLinkHosts:           # link hosts that count as a recording/transcript
+      - zoom.us
+      - drive.google.com
+      - fireflies.ai
+      - otter.ai
+
+correlation:
+  matchWindowHours: 24            # match an email to an event within this many hours of it
+
+handoff:
+  skill: meeting-to-artifacts
+  meetingArtifactsConfig: meeting-artifacts.config.yaml  # read its `series` registry + output tree
+  processedLog: raw/meetings/processed-sources.md        # dedup ledger (metadata + links only)
+
+privacy:
+  reviewGate: always             # or auto-known-series (still shows the digest; only pre-selects)
+  bodyAccess: metadata-first     # open full bodies only for already-matched candidates
