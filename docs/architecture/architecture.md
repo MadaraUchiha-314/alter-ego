@@ -26,3 +26,14 @@ here as they are added (`docs/architecture/<component>.md`).
 The end-to-end flow across the three skills is one seam per skill:
 `meeting-radar` (find + route) → `meeting-to-artifacts` (extract + review + route) →
 `knowledge-management` (store).
+
+## Release automation
+
+- **Release automation** (`.github/`) — a zero-dependency semantic release: on merge to
+  `main`, GitHub Actions derives the version bump from conventional commits, writes
+  `.claude-plugin/plugin.json`, updates the changelog, tags `v<version>`, and cuts the
+  GitHub release; PRs are gated by a blocking conventional-commit title lint and an
+  advisory contract-drift check. It produces the tags/releases the `alter-ego:upgrade`
+  skill walks. Capability doc:
+  [release-automation](../capabilities/release-automation.md); rationale
+  [decision-016](../decisions/decision-016.md).

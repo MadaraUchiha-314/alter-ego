@@ -58,6 +58,10 @@ user-owned (never touched) — so upgrades are safe by construction (issue #7).
   [`skills/upgrade/reference/reconciliation.md`](../../skills/upgrade/reference/reconciliation.md);
   vault-format migration:
   [`skills/upgrade/reference/vault-migration.md`](../../skills/upgrade/reference/vault-migration.md)
+- Where the versions `upgrade` diffs against come from — the tags/releases produced on
+  merge to `main` — is the [release-automation](./release-automation.md) capability
+  (issue #8, decision-016). This capability defines *when a version exists*; upgrade
+  defines *what to do* about it.
 
 ## History
 

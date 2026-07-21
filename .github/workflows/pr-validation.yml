@@ -1,0 +1,49 @@
+name: pr-validation
+
+# PR-time checks that keep the release derivation trustworthy (issue #8,
+# decision-016):
+#   * lint-title  — the PR title must be a valid Conventional Commit, because
+#     the squash-merge uses it and release.yml parses it. Blocking.
+#   * contract-drift — advisory warning when contract files change under a
+#     no-release title. Never blocks.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Lint PR title (conventional commits)
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: node .github/scripts/lint-commits.mjs
+
+  contract-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Advisory contract-drift check
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          CHANGED_FILES="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+          export CHANGED_FILES
+          node .github/scripts/check-contract-drift.mjs
