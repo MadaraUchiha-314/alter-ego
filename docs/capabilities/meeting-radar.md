@@ -44,12 +44,17 @@ so it is metadata-first and never forwards or sends mail.
   auto-known-series` MAY pre-select known-series occurrences but SHALL still show the digest
   and keep items deselectable (`SKILL.md` step 5, `reference/privacy.md`).
 - The system SHALL dedup against the `handoff.processedLog` ledger and the
-  `meeting-to-artifacts` output tree so a processed meeting is not piped twice, and SHALL
-  record only meeting metadata and links — never message contents — in that ledger
-  (`reference/handoff.md`, `reference/privacy.md`).
+  `meeting-to-artifacts` output tree at its configured paths (read from
+  `handoff.meetingArtifactsConfig`, never hardcoded) so a processed meeting is not piped
+  twice, and SHALL record only meeting metadata, links, and persisted-source paths —
+  never message contents — in that ledger (`reference/handoff.md`, `reference/privacy.md`,
+  decision-017).
 - The system SHALL hand each approved candidate to `meeting-to-artifacts` at its Ingest step
   as a handoff record (metadata + source kind + recording link or verbatim summary +
-  provenance), a shape that Ingest already accepts without an adapter (`reference/handoff.md`).
+  provenance), a shape that Ingest already accepts without an adapter, and SHALL treat the
+  record as transport, not storage: a handoff is complete only once the receiver has
+  persisted the verbatim payload to its `storage.rawSources`, whose path lands in the
+  ledger row (`reference/handoff.md`, decision-017).
 - The system SHALL be discovery-and-handoff only: it SHALL NOT extract artifacts (that is
   `meeting-to-artifacts`), SHALL NOT write to the knowledge vault (that is
   `knowledge-management`), SHALL NOT forward/send/quote email outward, and SHALL NOT chain
@@ -74,4 +79,5 @@ the templates-stay-internal rule (008), and the knowledge/code boundary (011).
 
 | Work item | What changed | Links |
 |-----------|--------------|-------|
+| issue-13 | Handoff records are transport, not storage — a handoff completes only once the receiver persists the verbatim payload; dedup follows the configured artifact tree (default now `knowledge/meetings/`); `processedLog` default moved off `raw/` | [decision](../decisions/decision-017.md), issue [#13](https://github.com/MadaraUchiha-314/alter-ego/issues/13) |
 | issue-10 | Initial `meeting-radar` skill: scans email + calendar, detects/correlates meeting recordings & summaries, dedups, and pipes reviewed candidates into meeting-to-artifacts | [issue #10](https://github.com/MadaraUchiha-314/alter-ego/issues/10), [decision-015](../decisions/decision-015.md) |

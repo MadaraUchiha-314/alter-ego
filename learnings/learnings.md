@@ -6,5 +6,4 @@ are checked in so the user can review and give feedback.
 
 | # | Title | Source | Date |
 |---|-------|--------|------|
-
-_No learnings recorded yet._
+| [001](./learning-001.md) | structural defaults need consent; `raw/` reads as verbatim; persist evidence first | user feedback (issue #13 retro) | 2026-07-22 |

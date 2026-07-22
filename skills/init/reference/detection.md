@@ -20,7 +20,8 @@ skills themselves (`init`, `upgrade`) — they are not repo-level capabilities.
 Signals that a producer skill applies (use as hints, then confirm — never auto-enable):
 
 - an existing config file for it at the repo root;
-- an existing output tree it targets (e.g. `raw/meetings/` for `meeting-to-artifacts`);
+- an existing output tree it targets (e.g. `knowledge/meetings/` — or the legacy
+  `raw/meetings/` artifact layout — for `meeting-to-artifacts`);
 - the skill's origin already registered in `knowledge.config.yaml` `sources`;
 - the user naming that workflow when they ask to set the repo up.
 

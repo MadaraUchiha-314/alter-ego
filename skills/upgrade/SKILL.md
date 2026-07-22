@@ -39,6 +39,11 @@ Walk the manifest and build a plan touching **only `managed: true` artifacts**:
   but do not apply yet.
 - **Vault `schema.md`** — if the current plugin's vault conventions differ from the
   `seededVersion` the vault carries, stage a `schema.md` reconciliation.
+- **Layout changes** — if a release moved a structural default (e.g. issue #13:
+  extracted meeting artifacts `raw/meetings/` → `knowledge/meetings/`, verbatim
+  sources persisted under `raw/`), stage the migration in
+  `reference/layout-migration.md`: move artifacts, backfill sources, rewrite links,
+  update config paths.
 - **The manifest** — new skills the plugin now ships get offered (delegating to
   `alter-ego:init`'s offer step); `alterEgoVersion`/`updated` get bumped at the end.
 
@@ -65,6 +70,9 @@ Apply approved items:
   as any other vault mutation.
 - **Config schema migrations** — apply the staged key-level edits to the repo's config,
   preserving every user value; a removed key is reported, never silently dropped.
+- **Layout migrations** — per `reference/layout-migration.md`: `git mv` the affected
+  trees, backfill what is recoverable, rewrite path-valued fields only, and log any
+  vault touch — always behind the same review gate.
 - **New skills** — run the offer step for anything the user accepts.
 
 ### 5. Health check (offer, don't force)

@@ -138,8 +138,8 @@
         },
         "processedLog": {
           "type": "string",
-          "default": "raw/meetings/processed-sources.md",
-          "description": "Append-only ledger of already-handed-off meeting sources (metadata + links only, never message contents), used to dedup on subsequent scans."
+          "default": "knowledge/meetings/processed-sources.md",
+          "description": "Append-only ledger of already-handed-off meeting sources (metadata, links, and the persisted source file's path only, never message contents), used to dedup on subsequent scans."
         }
       }
     },

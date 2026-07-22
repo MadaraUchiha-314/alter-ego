@@ -21,6 +21,9 @@ user-owned (never touched) — so upgrades are safe by construction (issue #7).
   (never the blank example, never outside the repo root), delegate seeding the knowledge
   vault to the knowledge-management skill's own `init`, and write `.alter-ego/manifest.yaml`
   (decision-014).
+- WHEN offering configs, `alter-ego:init` SHALL ask the taxonomy question — where
+  verbatim captures, extracted artifacts, and the vault live — as an explicit user
+  choice written into the configs, never an implicit default (issue #13, decision-017).
 - The system SHALL treat `plugin.json`'s `version` as the single source of truth and
   record a per-skill/per-primitive `seededVersion` in the manifest for per-artifact
   diffing, rather than stamping the plugin version into user/vault-owned front matter
@@ -38,6 +41,11 @@ user-owned (never touched) — so upgrades are safe by construction (issue #7).
   (flag → approve → migrate) with one `log.md` entry per migration, using the vault's
   self-describing `schema.md` as the from/to target — the same discipline as the rest of
   the knowledge skill (decision-014, decision-003).
+- WHEN a release moves a structural default (e.g. issue #13's artifact move
+  `raw/meetings/` → `knowledge/meetings/`), `alter-ego:upgrade` SHALL stage the layout
+  migration — move artifacts, backfill verbatim sources where recoverable, rewrite
+  path-valued fields, update config paths — review-gated with the full before/after
+  tree shown (`skills/upgrade/reference/layout-migration.md`, decision-017).
 - The system SHALL offer the knowledge-management `validate` lint as a post-migration
   health check, opt-in and never auto-run (decision-014).
 - The system SHALL be idempotent and manifest-loss tolerant: re-runs reconcile rather
@@ -57,7 +65,9 @@ user-owned (never touched) — so upgrades are safe by construction (issue #7).
 - Managed/user-owned reconciliation:
   [`skills/upgrade/reference/reconciliation.md`](../../skills/upgrade/reference/reconciliation.md);
   vault-format migration:
-  [`skills/upgrade/reference/vault-migration.md`](../../skills/upgrade/reference/vault-migration.md)
+  [`skills/upgrade/reference/vault-migration.md`](../../skills/upgrade/reference/vault-migration.md);
+  layout migration:
+  [`skills/upgrade/reference/layout-migration.md`](../../skills/upgrade/reference/layout-migration.md)
 - Where the versions `upgrade` diffs against come from — the tags/releases produced on
   merge to `main` — is the [release-automation](./release-automation.md) capability
   (issue #8, decision-016). This capability defines *when a version exists*; upgrade
@@ -67,4 +77,5 @@ user-owned (never touched) — so upgrades are safe by construction (issue #7).
 
 | Work item | What changed | Links |
 |-----------|--------------|-------|
+| issue-13 | `init` asks the taxonomy question (layout is explicit config, never a default); `upgrade` gains layout migrations, starting with the `raw/meetings/` → `knowledge/meetings/` artifact move + source backfill | [decision](../decisions/decision-017.md), issue [#13](https://github.com/MadaraUchiha-314/alter-ego/issues/13) |
 | issue-7 | Initial `alter-ego:init` + `alter-ego:upgrade` lifecycle skills: manifest, version stamping via `seededVersion`, managed vs. user-owned reconciliation, review-gated vault migration, the-loop composition | [issue #7](https://github.com/MadaraUchiha-314/alter-ego/issues/7), [decision-014](../decisions/decision-014.md) |

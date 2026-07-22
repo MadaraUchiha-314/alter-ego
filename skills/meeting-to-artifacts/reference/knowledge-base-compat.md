@@ -16,21 +16,26 @@ pipeline (decision-009; vault side: decisions 001–004).
 3. `tags: [meeting/<artifact-type>]` — nested Obsidian tags, one `meeting` tree.
 4. Cross-artifact links: relative markdown links that resolve on GitHub **and** in a
    vault. No `[[wikilinks]]`, no absolute paths.
-5. Routed tree is vault-pointable: pointing Obsidian at `raw/meetings/` (or a parent)
-   just works; no links depending on files outside the tree.
-6. Transcripts are immutable raw sources; artifacts are the derived layer, backlinked
-   via `sourceTranscript`.
+5. Routed tree is vault-pointable: pointing Obsidian at `knowledge/meetings/` (or a
+   parent) just works; no links depending on files outside the tree.
+6. Transcripts (and provider summaries/agendas) are immutable raw sources, **persisted
+   at Ingest** under `storage.rawSources` (default `raw/meetings/`); artifacts are the
+   derived layer, backlinked via `sourceTranscript` as a repo-relative path to the
+   persisted file (URL only when persistence failed) — issue #13.
 7. The effectiveness log is the append-only chronicle; never rewrite its history rows.
 8. Routed artifacts are **immutable once routed** — the vault records them with
    `version: sha256:` markers; corrections are new routed content, not edits.
 
 ## Division of labor
 
-The repo-level taxonomy (decision-012): `raw/` holds captured knowledge inputs (this
-skill's artifacts under `raw/meetings/`), `knowledge/` holds only the vault's derived
-layer, `docs/` stays for repo-development docs. This skill routes artifacts into
-`raw/meetings/` by default — never into the vault's `notes/`; the vault ingests those
-trees as *sources* and derives its own notes ("the vault never becomes a dumping ground
+The repo-level taxonomy (decision-012 as amended by decision-017): `raw/` holds
+**verbatim capture only** (transcripts, provider summaries, agendas — persisted at
+Ingest), `knowledge/` holds extractions — this skill's artifacts under
+`knowledge/meetings/`, the vault's own derived layer under its `notes/` — and `docs/`
+stays for repo-development docs. This skill routes artifacts into
+`knowledge/meetings/` by default — never into `raw/` (extractions are not captured
+inputs) and never into the vault's `notes/`; the vault ingests the artifact tree as
+*sources* and derives its own notes ("the vault never becomes a dumping ground
 for un-derived files", `knowledge-management/reference/vault-layout.md`). Entity
 resolution, indexing, staleness linting, and consolidation are the vault's job;
 `context.md` (glossary/ownership changes) is our richest feed into its entity notes.
