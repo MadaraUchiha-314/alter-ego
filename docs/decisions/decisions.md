@@ -5,6 +5,7 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
+| [018](./decision-018.md) | the-loop is mandatory for all work on this repo | accepted | 2026-07-22 |
 | [017](./decision-017.md) | `raw/` is verbatim capture only — sources persisted at Ingest, extractions default to `knowledge/meetings/` | accepted | 2026-07-22 |
 | [016](./decision-016.md) | automate plugin versioning with semantic-release, enforced at PR time with commitlint | accepted | 2026-07-21 |
 | [015](./decision-015.md) | meeting-radar is a discovery-only pipe from email/calendar into meeting-to-artifacts | accepted | 2026-07-21 |
