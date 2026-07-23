@@ -27,7 +27,9 @@ handoff_to: meeting-to-artifacts
 its configured provider.>
 
 <For summary-email / notes-email: the summary/notes text, verbatim, so meeting-to-artifacts
-uses it directly instead of pulling a recording.>
+uses it directly instead of pulling a recording. This record is transport, not storage —
+the receiver's Ingest persists this payload to its `storage.rawSources` before drafting;
+the handoff is complete only once that file exists (issue #13).>
 
 ## Note
 

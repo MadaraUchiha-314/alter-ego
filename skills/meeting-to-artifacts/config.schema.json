@@ -40,7 +40,7 @@
         "pathPattern": {
           "type": "string",
           "description": "Required when style is plain. Supports {date}, {slug}, {seriesSlug}, {id} placeholders.",
-          "examples": ["raw/meetings/{date}-{slug}/summary.md"]
+          "examples": ["knowledge/meetings/{date}-{slug}/summary.md"]
         },
         "dir": {
           "type": "string",
@@ -130,9 +130,13 @@
     },
     "storage": {
       "type": "object",
-      "description": "Per-artifact-type destination. Unset types fall back to the filesystem-git defaults in reference/routing.md.",
+      "description": "Per-artifact-type destination. Unset types fall back to the filesystem-git defaults in reference/routing.md. Two layers, never mixed (issue #13): rawSources is verbatim capture (default raw/meetings/), every other key is an extraction (default knowledge/meetings/).",
       "additionalProperties": false,
       "properties": {
+        "rawSources": {
+          "description": "The verbatim-source layer: where Ingest persists the transcript, provider AI summary, and agenda before any drafting. Default raw/meetings/{date}-{slug}/ — a directory pattern; files keep stable names (transcript.md, provider-summary.md, agenda.md). raw/ means verbatim capture only; extracted artifacts never route here (issue #13).",
+          "$ref": "#/$defs/artifactDestination"
+        },
         "summary": { "$ref": "#/$defs/artifactDestination" },
         "decisions": { "$ref": "#/$defs/artifactDestination" },
         "requirements": { "$ref": "#/$defs/artifactDestination" },
@@ -178,7 +182,7 @@
     },
     "effectivenessLog": {
       "type": "string",
-      "default": "raw/meetings/effectiveness-log.md",
+      "default": "knowledge/meetings/effectiveness-log.md",
       "description": "Path the per-meeting scorecard entries accumulate in."
     },
     "scorecardCadence": {

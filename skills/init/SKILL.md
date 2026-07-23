@@ -40,6 +40,12 @@ confirm the set; never silently enable everything.
 For every enabled skill that ships a `config.example.yaml`, offer to write its config
 file to the repo root (`knowledge.config.yaml`, `meeting-artifacts.config.yaml`, …):
 
+- **Ask the taxonomy question first** (issue #13): where verbatim captures, extracted
+  artifacts, and the vault live is a structural choice the user makes explicitly —
+  present the proposed layout (default: `raw/` = verbatim sources, `knowledge/` =
+  extractions and the vault, `docs/` = repo-development docs) via `AskUserQuestion`
+  and write the chosen paths into the configs. Layout is never an implicit default a
+  skill falls back to later.
 - Read the skill's `config.example.yaml` for structure; write a filled starting config
   with this repo's real name/paths baked in. **Never copy the blank example verbatim**
   (the-loop#36) and never write a config outside the repo root.

@@ -15,27 +15,33 @@ provider:
     # apiDocsUrl: "https://developers.zoom.us/docs/api/"
 
 storage:
+  # Two layers, never mixed (issue #13): rawSources = verbatim capture under raw/,
+  # everything else = extractions under knowledge/meetings/.
+  rawSources:
+    kind: filesystem-git
+    pathPattern: "raw/meetings/{date}-{slug}/"   # transcript.md, provider-summary.md, agenda.md — written at Ingest, before drafting
+
   decisions:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/decisions.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/decisions.md"
     # style: decision-log      # opt-in ADR routing; never defaults into a repo's docs/
     # dir: docs/decisions
 
   requirements:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/requirements.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/requirements.md"
 
   design:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/design.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/design.md"
 
   summary:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/summary.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/summary.md"
 
   tasks:
     kind: filesystem-git       # switch to mcp/cli once an issue tracker integration is wired up
-    pathPattern: "raw/meetings/{date}-{slug}/tasks.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/tasks.md"
     # kind: mcp
     # server: github
     # resourceHint: MadaraUchiha-314/alter-ego
@@ -43,19 +49,19 @@ storage:
 
   openQuestions:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/open-questions.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/open-questions.md"
 
   risks:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/risks.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/risks.md"
 
   disagreements:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/disagreements.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/disagreements.md"
 
   context:
     kind: filesystem-git
-    pathPattern: "raw/meetings/{date}-{slug}/context.md"
+    pathPattern: "knowledge/meetings/{date}-{slug}/context.md"
     # kind: mcp                # e.g. once an mcp server for Notion/Google Docs is configured
     # server: notion
     # resourceHint: "Team Wiki > Glossary"
@@ -71,5 +77,5 @@ series: []
   #   preReadCadence: every-occurrence
   #   publishChannel: "#design-reviews"
 
-effectivenessLog: raw/meetings/effectiveness-log.md
+effectivenessLog: knowledge/meetings/effectiveness-log.md
 scorecardCadence: on-request

@@ -20,16 +20,27 @@ recording reference to pull via the configured provider." A `recording-link`/`tr
 record maps to the latter; a `summary-email`/`notes-email` record maps to the former (paste
 the text). Radar produces exactly that shape — no adapter needed.
 
+## Payload durability
+
+The handoff record is an in-process message — transport, not storage. Inline-only text
+in a temp record is fragile: a scratchpad purge mid-run destroys the only copy
+(issue #13). Durability comes from the receiver: `meeting-to-artifacts` Ingest persists
+the verbatim payload (transcript, summary, agenda) to its `storage.rawSources` (default
+`raw/meetings/{date}-{slug}/`) before any drafting. A handoff is complete only once
+that source file exists; record its repo-relative path in the ledger row.
+
 ## Dedup
 
 Before handing off, drop occurrences already processed:
 
 - Check `handoff.processedLog` — the append-only ledger of prior handoffs.
-- Check the `meeting-to-artifacts` output tree (`raw/meetings/<date>-<slug>/`, discoverable
-  from `handoff.meetingArtifactsConfig`).
+- Check the `meeting-to-artifacts` output tree at the paths its config names (read
+  `handoff.meetingArtifactsConfig`; default `knowledge/meetings/<date>-<slug>/`) —
+  never a hardcoded location (issue #13).
 
 After a successful handoff, append one ledger row: date, title, series, source kind, link,
-and the handoff time. **Metadata and links only — never message contents** (`reference/privacy.md`).
+the repo-relative path of the source file Ingest persisted, and the handoff time.
+**Metadata, links, and paths only — never message contents** (`reference/privacy.md`).
 A re-scan that sees a matching ledger row skips the candidate (still lists it under "already
 processed" in the digest for transparency).
 

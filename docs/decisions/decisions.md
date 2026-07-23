@@ -5,11 +5,13 @@ record (`decision-<nnn>.md`). Newest first.
 
 | # | Title | Status | Date |
 |---|-------|--------|------|
+| [018](./decision-018.md) | the-loop is mandatory for all work on this repo | accepted | 2026-07-22 |
+| [017](./decision-017.md) | `raw/` is verbatim capture only — sources persisted at Ingest, extractions default to `knowledge/meetings/` | accepted | 2026-07-22 |
 | [016](./decision-016.md) | automate plugin versioning with semantic-release, enforced at PR time with commitlint | accepted | 2026-07-21 |
 | [015](./decision-015.md) | meeting-radar is a discovery-only pipe from email/calendar into meeting-to-artifacts | accepted | 2026-07-21 |
 | [014](./decision-014.md) | plugin lifecycle skills — `alter-ego:init` seeds, `alter-ego:upgrade` reconciles | accepted | 2026-07-21 |
 | [013](./decision-013.md) | no meeting artifact defaults into `docs/` — decisions included | accepted | 2026-07-19 |
-| [012](./decision-012.md) | `raw/` for captured inputs, `knowledge/` for derived — not `docs/` | accepted — carve-out superseded by 013 | 2026-07-19 |
+| [012](./decision-012.md) | `raw/` for captured inputs, `knowledge/` for derived — not `docs/` | accepted — carve-out superseded by 013; artifact default amended by 017 | 2026-07-19 |
 | [011](./decision-011.md) | knowledge and code stay separate; no the-loop coupling | accepted | 2026-07-18 |
 | [010](./decision-010.md) | install caveman + ponytail; skill docs stay minimal | accepted | 2026-07-18 |
 | [009](./decision-009.md) | meeting artifacts follow an Obsidian-compatible knowledge-base contract | accepted | 2026-07-17 |

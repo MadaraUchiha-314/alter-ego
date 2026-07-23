@@ -36,8 +36,9 @@ skills, because they all produce into or consume from it (issue #5 thread).
 - WHEN querying, the system SHALL answer from the vault with citations, and MAY file
   synthesized answers back as new notes.
 - The system SHALL ingest compliant producer-skill output (e.g. meeting artifacts per
-  PR #4's contract) without migration, and producer skills SHALL NOT maintain their
-  own derived layers (decision-004).
+  PR #4's contract) without migration, locating each producer's tree via that skill's
+  config rather than a hardcoded path, and producer skills SHALL NOT maintain their
+  own derived layers (decision-004, decision-017).
 
 ## Design
 
@@ -55,4 +56,5 @@ skills, because they all produce into or consume from it (issue #5 thread).
 
 | Work item | What changed | Links |
 |-----------|--------------|-------|
+| issue-13 | `meeting-artifact` ingestion locates the artifact tree via the producer's config (default now `knowledge/meetings/`) instead of a hardcoded `raw/meetings/`; the raw layer is the producer's persisted verbatim sources under `raw/` | [decision](../decisions/decision-017.md), issue [#13](https://github.com/MadaraUchiha-314/alter-ego/issues/13) |
 | issue-5 | Initial knowledge-management skill: vault format, two-layer provenance, staleness lint, tiered indexing, pluggable connectors | [issue #5](https://github.com/MadaraUchiha-314/alter-ego/issues/5), [decision-001](../decisions/decision-001.md), [decision-002](../decisions/decision-002.md), [decision-003](../decisions/decision-003.md), [decision-004](../decisions/decision-004.md) |

@@ -35,6 +35,6 @@ What becomes easier or harder as a result.
 
 ---
 
-> Routes to `raw/meetings/<date>-<slug>/decisions.md` by default; one block per
+> Routes to `knowledge/meetings/<date>-<slug>/decisions.md` by default; one block per
 > decision. With opt-in `style: decision-log`: one `decision-<nnn>.md` + index row in
 > the configured `dir`.

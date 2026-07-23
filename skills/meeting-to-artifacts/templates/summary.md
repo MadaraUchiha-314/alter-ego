@@ -5,7 +5,7 @@ meeting: "<meeting title>"
 date: YYYY-MM-DD
 series: ""                   # slug from meeting-artifacts.config.yaml, if recurring
 attendees: []
-sourceTranscript: ""         # path/reference to the transcript this was drafted from
+sourceTranscript: ""         # repo-relative path to the source persisted at Ingest (e.g. raw/meetings/<date>-<slug>/transcript.md); URL only if persistence failed
 status: draft                # draft | approved
 ---
 

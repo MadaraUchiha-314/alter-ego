@@ -1,7 +1,9 @@
 # Decision 012: `raw/` for captured inputs, `knowledge/` for derived — not `docs/`
 
 - **Status:** accepted — supersedes the `docs/meetings/` default named in decisions
-  005/009; its own `docs/decisions/` carve-out is superseded by decision-013
+  005/009; its own `docs/decisions/` carve-out is superseded by decision-013; its
+  routing of extracted artifacts under `raw/` is amended by decision-017 (`raw/` is
+  verbatim capture only; extractions default to `knowledge/meetings/`)
 - **Date:** 2026-07-19
 - **Deciders:** @MadaraUchiha-314 (PR review comment)
 - **Work item:** issue-2 / PR #4

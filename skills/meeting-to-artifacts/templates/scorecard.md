@@ -7,7 +7,7 @@ generatedFrom: ""            # path to the effectiveness log this was rolled up 
 
 # Meeting effectiveness scorecard: <period>
 
-Rolled up from `raw/meetings/effectiveness-log.md` (or the configured
+Rolled up from `knowledge/meetings/effectiveness-log.md` (or the configured
 `effectivenessLog`). See `reference/metrics-and-scorecard.md` for definitions.
 
 | Metric | Value | Trend vs. last period |

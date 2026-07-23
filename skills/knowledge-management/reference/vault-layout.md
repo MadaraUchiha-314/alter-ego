@@ -43,9 +43,11 @@ tags, mermaid is fine, HTML-only content is not.
   (OKF: every directory is browsable via its index).
 - `scratch/`, `.obsidian/` and other tool workspaces are ignored by this skill and
   belong in `.gitignore` where transient.
-- Producer skills route their output *into* `sources/`-adjacent trees or their own
-  homes (e.g. `raw/meetings/`); those trees are ingested as sources, not maintained
-  as notes. The vault never becomes a dumping ground for un-derived files.
+- Producer skills route their extractions *into* their own trees at their configured
+  paths (e.g. meeting artifacts under `knowledge/meetings/`, beside the vault's own
+  folders) and their verbatim captures under `raw/`; those trees are ingested as
+  sources, not maintained as notes. The vault never becomes a dumping ground for
+  un-derived files.
 
 ## Catalog and chronicle
 

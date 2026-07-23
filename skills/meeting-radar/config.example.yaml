@@ -48,7 +48,7 @@ correlation:
 handoff:
   skill: meeting-to-artifacts
   meetingArtifactsConfig: meeting-artifacts.config.yaml  # read its `series` registry + output tree
-  processedLog: raw/meetings/processed-sources.md        # dedup ledger (metadata + links only)
+  processedLog: knowledge/meetings/processed-sources.md  # dedup ledger (metadata, links, persisted-source paths only)
 
 privacy:
   reviewGate: always             # or auto-known-series (still shows the digest; only pre-selects)

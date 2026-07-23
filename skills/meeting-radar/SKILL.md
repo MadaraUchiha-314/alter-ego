@@ -57,8 +57,9 @@ a candidate on its own; an event with no recording/summary yet is noted but not 
 ### 4. Dedup
 
 Drop occurrences already handed off — check the `handoff.processedLog` ledger and the
-`meeting-to-artifacts` output tree (`raw/meetings/`). Re-piping a processed meeting is a
-duplicate you caused.
+`meeting-to-artifacts` output tree at its **configured** paths (read
+`handoff.meetingArtifactsConfig`; default `knowledge/meetings/`) — never assume a
+hardcoded tree (issue #13). Re-piping a processed meeting is a duplicate you caused.
 
 ### 5. Human review gate — never skip
 
@@ -72,9 +73,13 @@ when a correlation is uncertain (which event a stray "notes from our sync" mail 
 
 For each approved candidate, write a `templates/handoff-record.md` (title, date, series,
 attendees, the recording/transcript link or verbatim summary) and invoke
-`handoff.skill` — `meeting-to-artifacts`, at its **Ingest** step — with it. That skill owns
-extraction, its own human-review gate, and routing; the `knowledge-management` vault stores
-the result. Append one row to `handoff.processedLog` so the source isn't piped again.
+`handoff.skill` — `meeting-to-artifacts`, at its **Ingest** step — with it. The record is
+transport, not storage: a verbatim payload survives only once the receiver's Ingest
+persists it to its `storage.rawSources` — confirm that source file exists before
+considering the handoff done (issue #13). That skill owns extraction, its own
+human-review gate, and routing; the `knowledge-management` vault stores the result.
+Append one row to `handoff.processedLog` — including the persisted source's path — so
+the source isn't piped again.
 
 ## Boundaries
 
